@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 //using TMPro;
 
-public class UI_Button : UI_Base
+public class UI_Button : UI_Popup
 {
     /*[SerializeField]
     TextMeshProUGUI _text;
@@ -34,25 +34,30 @@ public class UI_Button : UI_Base
     }
     // Start is called before the first frame update
     void Start()
+    { 
+        Init();
+    }
+    //컴퍼넌트에 연결해줄 함수 형태
+
+    public override void Init()
     {
-       Bind<Button>(typeof(Buttons));
-       Bind<Text>(typeof(Texts));
-       Bind<TextMeshProUGUI>(typeof(Texts));
-       Bind<GameObject>(typeof(GameObjects));
-       Bind<Image>(typeof(Images));
-       //test
-       //Get<Text>((int)Texts.ScoreText).text = "Test";
-       GetTextMeshProUGUI((int)Texts.ScoreText).text = "Test";
-       //GetText((int)Texts.ScoreText).text = "Test";
-       GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);
+        base.Init();
+
+        Bind<Button>(typeof(Buttons));
+        Bind<Text>(typeof(Texts));
+        Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<GameObject>(typeof(GameObjects));
+        Bind<Image>(typeof(Images));
+        //test
+        //Get<Text>((int)Texts.ScoreText).text = "Test";
+        GetTextMeshProUGUI((int)Texts.ScoreText).text = "Test";
+        //GetText((int)Texts.ScoreText).text = "Test";
+        GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);
         GameObject go = GetImage((int)Images.image).gameObject;
         //UI_EventHandler evt = go.GetComponent<UI_EventHandler>();
         //evt.OnBeginDragHandler += ((PointerEventData data) => { go.transform.position = data.position; });
-        AddUIEvent(go,(PointerEventData data) => { go.transform.position = data.position; },Define.UIEvent.Drag);
+        AddUIEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
     }
-    //컴퍼넌트에 연결해줄 함수 형태
-   
-    
     // Update is called once per frame
     void Update()
     {

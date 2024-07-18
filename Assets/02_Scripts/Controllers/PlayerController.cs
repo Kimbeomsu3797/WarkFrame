@@ -26,8 +26,15 @@ public class PlayerController : MonoBehaviour
         Managers.input.MouseAction -= OnMouseClicked;
         Managers.input.MouseAction += OnMouseClicked;
         //Managers.Resource.Instantiate("UI/UI_Button"); // 프리팹폴더에 UI폴더를 만든 후 관리 // 프리팹폴더가 베이스라는걸 기억
+        //Managers.UI.ShowPopupUI<UI_Button>("UI_Button");
+        //Debug.Log(5656);
+        //uiPopup = Managers.UI.ShowPopupUI<UI_Button>(); // Managers.UI.ShowPopupUI<UI_Button>("팝업UI명");
+        for (int i =0; i<5; i++)
+        {
+            Managers.UI.ShowPopupUI<UI_Button>();
+        }
     }
-
+    UI_Button uiPopup;
 
     void Update()
     {
@@ -43,7 +50,14 @@ public class PlayerController : MonoBehaviour
                 PlayerState.Idle:
                 UpdateIdle();
                 break;
+                
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Managers.UI.ClosePopupUI();
+            Managers.UI.ClosePopupUI(uiPopup);
+        }
+        
         /*if (_moveToDest)
         {
             Vector3 dir = _destPos - transform.position;//방향
