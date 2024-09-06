@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Define
+public class Define // 상태라거나 필요한 변수같은걸 여기에 모아둠
 {
     public enum UIEvent
     {

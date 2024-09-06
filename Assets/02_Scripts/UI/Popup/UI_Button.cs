@@ -5,7 +5,6 @@ using UnityEngine;
 using System;
 using System.ComponentModel;
 using UnityEngine.UI;
-
 using UnityEngine.EventSystems;
 //using TMPro;
 
@@ -44,8 +43,8 @@ public class UI_Button : UI_Popup
         base.Init();
 
         Bind<Button>(typeof(Buttons));
-        Bind<Text>(typeof(Texts));
         Bind<TextMeshProUGUI>(typeof(Texts));
+        //Bind<Text>(typeof(Texts));
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
         //test

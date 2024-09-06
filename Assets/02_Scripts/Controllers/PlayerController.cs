@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -29,9 +30,9 @@ public class PlayerController : MonoBehaviour
         //Managers.UI.ShowPopupUI<UI_Button>("UI_Button");
         //Debug.Log(5656);
         //uiPopup = Managers.UI.ShowPopupUI<UI_Button>(); // Managers.UI.ShowPopupUI<UI_Button>("ÆË¾÷UI¸í");
-        for (int i =0; i<5; i++)
+        for (int i =0; i<1; i++)
         {
-            Managers.UI.ShowPopupUI<UI_Button>();
+            uiPopup = Managers.UI.ShowPopupUI<UI_Button>();
         }
     }
     UI_Button uiPopup;
@@ -52,10 +53,18 @@ public class PlayerController : MonoBehaviour
                 break;
                 
         }
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject())
         {
             //Managers.UI.ClosePopupUI();
-            Managers.UI.ClosePopupUI(uiPopup);
+            
+            
+        }
+        else if(Input.GetMouseButtonDown(0))
+        {
+            if (uiPopup != null)
+            {
+                Managers.UI.ClosePopupUI(uiPopup);
+            }
         }
         
         /*if (_moveToDest)

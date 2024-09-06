@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class UI_Base : MonoBehaviour
 {
     protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
-   
+   //컴퍼넌트에 연결해줄 함수 형태로 만듬(type을 사용할려면 using system;)
     protected void Bind<T>(Type type) where T : UnityEngine.Object
     {
         string[] names = Enum.GetNames(type);
@@ -41,10 +41,11 @@ public class UI_Base : MonoBehaviour
             return null;
         return objects[idx] as T; // 오브젝트에다가 인덱스번호를 추출한 다음에 T로 캐스팅 해줌
     }
-    protected Text GetText(int idx) { return Get<Text>(idx); }
+    //protected Text GetText(int idx) { return Get<Text>(idx); }
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected Image GetImage(int idx) { return Get<Image>(idx); }
     protected TextMeshProUGUI GetTextMeshProUGUI(int idx) { return Get<TextMeshProUGUI>(idx); }
+    protected GameObject GetGameObject(int idx) { return Get<GameObject>(idx); }
 
     //go는 action이 포함된 스크립트가 있는 게임오브젝트 // action은 구독을 시킬 액션 // mode(상태)
     /*public static void AddUIEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click) //, OnDragHandler
