@@ -13,14 +13,20 @@ public class ResourceManager
     public GameObject Instantiate(string path, Transform parent = null)
     {
         GameObject prefab = Load<GameObject>($"Prefabs/{path}");
-        if (prefab == null)
+        if(prefab == null)
         {
             Debug.Log($"Failed to load prefab : {path}");
             return null;
         }
 
-        //object를 붙이지 않으면 재귀하려고 할거라서 //설명이 부족함 지금은 그냥 이렇게 쓰자
-        return Object.Instantiate(prefab, parent);
+        GameObject go = Object.Instantiate(prefab, parent);
+        int index = go.name.IndexOf("(Clone)"); //"(Clone)"문자열을 찾아서 인덱스를 반환
+        if (index > 0)
+        {
+            go.name = go.name.Substring(0, index); //UI_Inven_Item//(Clone)
+        }
+
+        return go;
     }
 
     //랩핑해본것일 뿐 실제로는 필요없다.
@@ -31,4 +37,5 @@ public class ResourceManager
 
         Object.Destroy(go);
     }
+
 }

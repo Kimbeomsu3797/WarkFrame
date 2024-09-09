@@ -32,10 +32,11 @@ public class PlayerController : MonoBehaviour
         //uiPopup = Managers.UI.ShowPopupUI<UI_Button>(); // Managers.UI.ShowPopupUI<UI_Button>("팝업UI명");
         for (int i =0; i<1; i++)
         {
-            uiPopup = Managers.UI.ShowPopupUI<UI_Button>();
+            uiPopup = Managers.UI.ShowPopupUI<UI_Button>();//예제 코드(프레임워크아님)
         }
+        Managers.UI.ShowSceneUI<UI_Inven>();//예제 코드(프레임워크아님)
     }
-    UI_Button uiPopup;
+    UI_Button uiPopup;//예제 코드(프레임워크아님)
 
     void Update()
     {
@@ -59,13 +60,14 @@ public class PlayerController : MonoBehaviour
             
             
         }
-        else if(Input.GetMouseButtonDown(0))
+        else if(Input.GetKeyDown(KeyCode.Escape))
         {
             if (uiPopup != null)
             {
                 Managers.UI.ClosePopupUI(uiPopup);
             }
         }
+       
         
         /*if (_moveToDest)
         {

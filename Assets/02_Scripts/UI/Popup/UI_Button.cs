@@ -51,11 +51,11 @@ public class UI_Button : UI_Popup
         //Get<Text>((int)Texts.ScoreText).text = "Test";
         GetTextMeshProUGUI((int)Texts.ScoreText).text = "Test";
         //GetText((int)Texts.ScoreText).text = "Test";
-        GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);
+        GetButton((int)Buttons.PointButton).gameObject.BindUIEvent(OnButtonClicked);
         GameObject go = GetImage((int)Images.image).gameObject;
         //UI_EventHandler evt = go.GetComponent<UI_EventHandler>();
         //evt.OnBeginDragHandler += ((PointerEventData data) => { go.transform.position = data.position; });
-        AddUIEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
+        BindUIEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
     }
     // Update is called once per frame
     void Update()
@@ -68,7 +68,7 @@ public class UI_Button : UI_Popup
         //_score++;
         //_text.text = $"점수 : { _score}";
         _score++;
-        GetTextMeshProUGUI((int)Texts.ScoreText).text = $"점수 : {_score}";
+        GetTextMeshProUGUI((int)Texts.PointText).text = $"점수 : {_score}";
     }
   
 }

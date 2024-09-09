@@ -8,6 +8,9 @@ public class UIManager
     //가장 마지막에 띄운 팝업이 가장 먼저 사라져야하기 때문에
     UI_Scene _sceneUI = null;
     Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
+    Stack<UI_Inven> _invenStack = new Stack<UI_Inven>();
+    //스텍은 마지막에 들어간게 나옴
+    //Q는 먼저들어간게 나옴
     public T ShowPopupUI<T>(string name = null) where T : UI_Popup
         //T는 아무T나 받는게 아니라 무조건 UI 팝업을 상속받는 애로 만들자
     {
@@ -17,8 +20,8 @@ public class UIManager
         GameObject go = Managers.Resource.Instantiate($"UI/Popup/{name}");//팝업생성
         T popup = Util.GetorAddComponent<T>(go); // 컴퍼넌트가 붙어있지 않다면 추가
         _popupStack.Push(popup);
-        GameObject root = GameObject.Find("@UI_Root");
-        /*if(root == null)
+        /*GameObject root = GameObject.Find("@UI_Root");
+        if(root == null)
         {
             root = new GameObject { name = "@UI_Root" };
         }*/
@@ -36,7 +39,7 @@ public class UIManager
         T sceneUI = Util.GetorAddComponent<T>(go); // 컴퍼넌트가 붙어있지 않다면 추가
         _sceneUI = sceneUI;
        
-       /* GameObject root = GameObject.Find("@UI_Root");
+        /*GameObject root = GameObject.Find("@UI_Root");
         if (root == null)
         {
             root = new GameObject { name = "@UI_Root" };
@@ -44,6 +47,17 @@ public class UIManager
 
         go.transform.SetParent(Root.transform);
         return sceneUI;
+    }
+    public T MakeSubItem<T>(Transform parent = null, string name = null)where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}");
+        if (parent != null)
+            go.transform.SetParent(parent);
+
+        return Util.GetorAddComponent<T>(go);
     }
     public GameObject Root
     {
@@ -105,4 +119,32 @@ public class UIManager
         while (_popupStack.Count > 0)
             ClosePopupUI();
     }
+    public void CloseSceneUI()
+    {
+        if (_invenStack.Count == 0)
+            return;
+
+        UI_Inven inven = _invenStack.Pop();
+        Managers.Resource.Destroy(inven.gameObject);
+        inven = null;
+        _order--;
+    }
+    public void CloseSceneUI(UI_Inven Inven) // 삭제할것을 지정할 수 있으니 좀 더 안전하게 삭제할 수 있다.
+    {
+        if (_invenStack.Count == 0)
+            return;
+        // Peek() : Stack <T>의 맨 위에서 개체를 제거하지 않고 반환합니다. (꺼내지 않고 엿본다고 생각)
+        if (_invenStack.Peek() != Inven)
+        {
+            Debug.Log("Close Inven Failed!");
+            return;
+        }
+        CloseSceneUI();
+    }
+    public void CloseAllSceneUI()
+    {
+        while (_invenStack.Count > 0)
+            CloseSceneUI();
+    }
+
 }
