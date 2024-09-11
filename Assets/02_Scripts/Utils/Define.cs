@@ -18,4 +18,17 @@ public class Define // 상태라거나 필요한 변수같은걸 여기에 모아둠
     {
         Quaterview, testview //
     }
+    public enum Scene
+    {
+        Unknown,
+        Login,
+        Lobby,
+        Game,
+    }
+    public enum Sound
+    {
+        Bgm,
+        Effect,
+        MaxCount,
+    }
 }

@@ -30,11 +30,11 @@ public class PlayerController : MonoBehaviour
         //Managers.UI.ShowPopupUI<UI_Button>("UI_Button");
         //Debug.Log(5656);
         //uiPopup = Managers.UI.ShowPopupUI<UI_Button>(); // Managers.UI.ShowPopupUI<UI_Button>("팝업UI명");
-        for (int i =0; i<1; i++)
+        /*for (int i =0; i<1; i++)
         {
             uiPopup = Managers.UI.ShowPopupUI<UI_Button>();//예제 코드(프레임워크아님)
         }
-        Managers.UI.ShowSceneUI<UI_Inven>();//예제 코드(프레임워크아님)
+        Managers.UI.ShowSceneUI<UI_Inven>();//예제 코드(프레임워크아님)*/
     }
     UI_Button uiPopup;//예제 코드(프레임워크아님)
 

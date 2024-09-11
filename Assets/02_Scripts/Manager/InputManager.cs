@@ -17,7 +17,7 @@ public class InputManager
     //이렇게 관리하면 또 좋은 것은 어디서 키보드 입력을 받았는지 찾기가 어려운 문제가 해소된다.
     public void OnUpdate()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        if(EventSystem.current.IsPointerOverGameObject())
             return;
         if(Input.anyKey && KeyAction != null)
          KeyAction.Invoke();
@@ -40,5 +40,9 @@ public class InputManager
         //하나의 Form을 다른 thread에서 접근하게 될 경우에 기존의 Form과 충돌이 날 수 있다.
         //이 때 invoke를 사용하여 실행하려고 하는 메소드의 대리자(delegate)를 실행시키면 된다.
     }
-
+    public void Clear()
+    {
+        KeyAction = null;
+        MouseAction = null;
+    }
 }
