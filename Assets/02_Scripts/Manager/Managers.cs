@@ -14,12 +14,15 @@ public class Managers : MonoBehaviour
     UIManager _ui = new UIManager();
     SceneManagerEx _scene = new SceneManagerEx();
     SoundManager _sound = new SoundManager();
-
+    poolManager _pool = new poolManager();
+    DataManager _data = new DataManager();
     public static SoundManager Sound { get { return instance._sound; } }
     public static SceneManagerEx Scene { get { return instance._scene; } }
     public static InputManager input { get { return instance._input; } }
     public static ResourceManager Resource { get { return instance._resource; } }
     public static UIManager UI { get { return instance._ui; } }
+    public static poolManager Pool { get { return instance._pool; } }
+    public static DataManager Data { get { return instance._data; } }
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +46,8 @@ public class Managers : MonoBehaviour
             }
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<Managers>();
-
+            s_instance._data.Init();
+            s_instance._pool.Init();
             s_instance._sound.Init();
         }
     }
@@ -53,5 +57,7 @@ public class Managers : MonoBehaviour
         Sound.Clear();
         Scene.Clear();
         UI.Clear();
+
+        Pool.Clear();
     }
 }

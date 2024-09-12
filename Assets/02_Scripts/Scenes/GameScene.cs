@@ -14,6 +14,10 @@ public class GameScene : BaseScene
         base.Init();
         SceneType = Define.Scene.Game;
         Managers.UI.ShowSceneUI<UI_Inven>();
+
+        for (int i = 0; i < 2; i++)
+            Managers.Resource.Instantiate("unitychan");
+        Dictionary<int, Stat> Dict = Managers.Data.StatDict;
     }
     public override void Clear()
     {

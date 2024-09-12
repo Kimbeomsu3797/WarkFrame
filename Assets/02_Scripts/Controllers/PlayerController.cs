@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject())
         {
-            //Managers.UI.ClosePopupUI();
+            Managers.UI.ClosePopupUI();
             
             
         }

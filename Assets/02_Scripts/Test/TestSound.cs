@@ -5,6 +5,7 @@ using UnityEngine;
 public class TestSound : MonoBehaviour
 {
     public AudioClip audioClip;
+    public AudioClip audioClip2;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +19,6 @@ public class TestSound : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Managers.Sound.Play("Sounds/univ0001",Define.Sound.Effect);
+        Managers.Sound.Play(audioClip2);
     }
 }
