@@ -31,4 +31,10 @@ public class Define // 상태라거나 필요한 변수같은걸 여기에 모아둠
         Effect,
         MaxCount,
     }
+    public enum Layer
+    {
+        Monster = 8,
+        Ground = 9, // 근데이거 몬스터만 8로만 해줘도 자동으로 9 10되는거 아닌가?
+        Block = 10,
+    }
 }

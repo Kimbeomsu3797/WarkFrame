@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    float _speed = 10.0f;  // _ 를 사용하면 전역변수로 사용한다는 뜻
-
+    //float _speed = 10.0f;  // _ 를 사용하면 전역변수로 사용한다는 뜻
+    PlayerStat _stat;
     bool _moveToDest = false;
     Vector3 _destPos;
     //float wait_run_ratio = 0;
@@ -18,12 +19,13 @@ public class PlayerController : MonoBehaviour
         Die,
         Moving,
         Idle,
+        Skill,
     }
     PlayerState _state = PlayerState.Idle;
     void Start()
     {
-        Managers.input.KeyAction -= Onkeyboard;
-        Managers.input.KeyAction += Onkeyboard;
+        //Managers.input.KeyAction -= Onkeyboard;
+        //Managers.input.KeyAction += Onkeyboard;
         Managers.input.MouseAction -= OnMouseClicked;
         Managers.input.MouseAction += OnMouseClicked;
         //Managers.Resource.Instantiate("UI/UI_Button"); // 프리팹폴더에 UI폴더를 만든 후 관리 // 프리팹폴더가 베이스라는걸 기억
@@ -35,6 +37,9 @@ public class PlayerController : MonoBehaviour
             uiPopup = Managers.UI.ShowPopupUI<UI_Button>();//예제 코드(프레임워크아님)
         }
         Managers.UI.ShowSceneUI<UI_Inven>();//예제 코드(프레임워크아님)*/
+        _stat = gameObject.GetComponent<PlayerStat>();
+        Managers.input.KeyAction -= Onkeyboard;
+        Managers.input.KeyAction += Onkeyboard;
     }
     UI_Button uiPopup;//예제 코드(프레임워크아님)
 
@@ -134,18 +139,30 @@ public class PlayerController : MonoBehaviour
     void UpdateMoving()
     {
         Vector3 dir = _destPos - transform.position;
-        if(dir.magnitude < 0.0001f)
+        if(dir.magnitude < 0.1f)
         {
             _state = PlayerState.Idle;
         }
         else
         {
-            float moveDist = Mathf.Clamp(_speed*Time.deltaTime,0, dir.magnitude);
-            transform.position += dir.normalized* moveDist;
-            transform.rotation = Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(dir), 20*Time.deltaTime);
-            Animator anim = GetComponent<Animator>();
-            anim.SetFloat("speed",_speed);
+            NavMeshAgent nma = gameObject.GetOrAddComponent<NavMeshAgent>();
+            float moveDist = Mathf.Clamp(_stat.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
+            nma.Move(dir.normalized * moveDist);
+
+            Debug.DrawRay(transform.position, dir.normalized, Color.green);
+
+            if (Physics.Raycast(transform.position, dir, 1.0f, LayerMask.GetMask("Block")))
+            {
+                _state = PlayerState.Idle;
+                return;
+            }
+
+            //float moveDist = Mathf.Clamp(_speed*Time.deltaTime,0, dir.magnitude);
+            // transform.position += dir.normalized* moveDist;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
         }
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", _stat.MoveSpeed);
     }
     void UpdateIdle()
     {
@@ -165,7 +182,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.forward), 0.2f);
             //transform.Translate(Vector3.forward * Time.deltaTime * _speed);
             //transform.Translate(Vector3.forward * Time.deltaTime * _speed);   // 로컬 좌표라서 바라보는 방향으로 가면 됨
-            transform.position += Vector3.forward * Time.deltaTime * _speed;    // 월드 좌표라서 각 이동마다 방향을 정해줘야 함
+            transform.position += Vector3.forward * Time.deltaTime * _stat.MoveSpeed;    // 월드 좌표라서 각 이동마다 방향을 정해줘야 함
         }
 
         if (Input.GetKey(KeyCode.S))
@@ -174,7 +191,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.back), 0.2f);
             //transform.Translate(Vector3.back * Time.deltaTime * _speed);
             //transform.Translate(Vector3.forward * Time.deltaTime * _speed);
-            transform.position += Vector3.back * Time.deltaTime * _speed;
+            transform.position += Vector3.back * Time.deltaTime * _stat.MoveSpeed;
         }
 
         if (Input.GetKey(KeyCode.A))
@@ -183,7 +200,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), 0.2f);
             //transform.Translate(Vector3.left * Time.deltaTime * _speed);
             //transform.Translate(Vector3.forward * Time.deltaTime * _speed);
-            transform.position += Vector3.left * Time.deltaTime * _speed;
+            transform.position += Vector3.left * Time.deltaTime * _stat.MoveSpeed;
         }
 
         if (Input.GetKey(KeyCode.D))
@@ -192,10 +209,11 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.2f);
             //transform.Translate(Vector3.right * Time.deltaTime * _speed);
             //transform.Translate(Vector3.forward * Time.deltaTime * _speed);
-            transform.position += Vector3.right * Time.deltaTime * _speed;
+            transform.position += Vector3.right * Time.deltaTime * _stat.MoveSpeed;
         }
         _moveToDest = false; //클릭방식으로 이동 불가
     }
+    int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster); // 이렇게도 써볼려고 한 것 // 이건 나중에 추가로 한번 더 봐야할듯
     void OnMouseClicked(Define.MouseEvent evt)
     {
         if (_state == PlayerState.Die)
@@ -209,11 +227,18 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
 
         RaycastHit hit;
-        if(Physics.Raycast(ray,out hit,100.0f, LayerMask.GetMask("Ground"))) // LayerMask.GetMask는 땅만 클릭될수있게 해주는 코드
+        if(Physics.Raycast(ray,out hit,100.0f, _mask)) // LayerMask.GetMask는 땅만 클릭될수있게 해주는 코드
         {
-            _destPos = hit.point;
-            //_moveToDest = true;
-            _state = PlayerState.Moving;
+            if(hit.collider.gameObject.layer == (int)Define.Layer.Monster)
+            {
+
+            }
+            else
+            {
+                _destPos = hit.point;
+                //_moveToDest = true;
+                _state = PlayerState.Moving;
+            }
         }
     }
 }

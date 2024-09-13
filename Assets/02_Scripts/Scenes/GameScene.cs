@@ -17,7 +17,7 @@ public class GameScene : BaseScene
 
         //for (int i = 0; i < 2; i++)
             //Managers.Resource.Instantiate("unitychan");
-        Dictionary<int, Stat> Dict = Managers.Data.StatDict;
+        Dictionary<int, Data.Stat> Dict = Managers.Data.StatDict;
     }
     public override void Clear()
     {
